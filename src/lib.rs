@@ -85,7 +85,6 @@ impl Platform {
         context.set_fonts(descriptor.font_definitions.clone());
         context.set_style(descriptor.style);
         let raw_input = egui::RawInput {
-            pixels_per_point: Some(descriptor.scale_factor as f32),
             screen_rect: Some(egui::Rect::from_min_size(
                 Pos2::default(),
                 vec2(
@@ -137,7 +136,7 @@ impl Platform {
                     new_inner_size,
                 } => {
                     self.scale_factor = *scale_factor;
-                    self.raw_input.pixels_per_point = Some(*scale_factor as f32);
+                    self.context().set_zoom_factor(self.scale_factor as f32);
                     self.raw_input.screen_rect = Some(egui::Rect::from_min_size(
                         Default::default(),
                         vec2(new_inner_size.width as f32, new_inner_size.height as f32)
@@ -324,6 +323,7 @@ impl Platform {
                                         pressed,
                                         modifiers: winit_to_egui_modifiers(self.modifier_state),
                                         repeat: false,
+                                        physical_key: None,
                                     });
                                 }
                             }
